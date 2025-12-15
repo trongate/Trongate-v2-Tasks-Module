@@ -37,8 +37,8 @@ Visit the official site: [trongate.io](https://trongate.io)
 ## Installation
 
 1. **Install Trongate v2** (if not already done):
-   - Use the free Trongate Desktop App: [trongate.io/download](https://trongate.io/download)
-   - Or follow the docs: [trongate.io/docs](https://trongate.io/docs)
+   - Download or clone the official framework from GitHub: [https://github.com/trongate/trongate-framework](https://github.com/trongate/trongate-framework)
+   - For full documentation and guides, visit: [trongate.io/documentation](https://trongate.io/documentation)
 
 2. **Add the module**:
    - Clone or download this repo into your project's `modules` directory:
