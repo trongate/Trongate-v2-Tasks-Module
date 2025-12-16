@@ -11,10 +11,12 @@
         echo form_input('task_title', $task_title, ["placeholder" => "Enter Task Title"]);
         echo form_label('Task Description');
         echo form_textarea('task_description', $task_description, ["placeholder" => "Enter Task Description"]);
-        echo '<div>';
-        echo form_label('Complete');
+
+        echo '<label>';
         echo form_checkbox('complete', 1, $complete);
-        echo '</div>';
+        echo ' Complete';
+        echo '</label>';
+
         echo '<div class="text-center">';
         echo anchor($cancel_url, 'Cancel', ['class' => 'button alt']);
         echo form_submit('submit', 'Submit');
