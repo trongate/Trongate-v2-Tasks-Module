@@ -28,7 +28,7 @@ class Tasks extends Trongate {
      * @return void
      */
     public function manage(): void {
-        $this->trongate_security->_make_sure_allowed();
+        $this->trongate_security->make_sure_allowed();
         
         $limit = $this->get_limit();
         $offset = $this->get_offset();
@@ -56,7 +56,7 @@ class Tasks extends Trongate {
      * @return void
      */
     public function create(): void {
-        $this->trongate_security->_make_sure_allowed();
+        $this->trongate_security->make_sure_allowed();
         
         $update_id = segment(3, 'int');
         $data = $this->model->get_form_data($update_id);
@@ -82,7 +82,7 @@ class Tasks extends Trongate {
      * @return void
      */
     public function submit(): void {
-        $this->trongate_security->_make_sure_allowed();
+        $this->trongate_security->make_sure_allowed();
         
         $submit = post('submit', true);
         
@@ -95,10 +95,10 @@ class Tasks extends Trongate {
                 $data = $this->model->get_post_data_for_database();
                 
                 if ($update_id > 0) {
-                    $this->db->update($update_id, $data, 'tasks');
+                    $this->model->update_record($update_id, $data);
                     $flash_msg = 'Task updated successfully';
                 } else {
-                    $update_id = $this->db->insert($data, 'tasks');
+                    $update_id = $this->model->create_new_record($data);
                     $flash_msg = 'Task created successfully';
                 }
                 
@@ -121,7 +121,7 @@ class Tasks extends Trongate {
      * @return void
      */
     public function show(): void {
-        $this->trongate_security->_make_sure_allowed();
+        $this->trongate_security->make_sure_allowed();
         
         $update_id = segment(3, 'int');
         
@@ -130,9 +130,9 @@ class Tasks extends Trongate {
             return;
         }
 
-        $record = $this->db->get_where($update_id, 'tasks');
+        $record = $this->model->find_by_id($update_id);
         
-        if (empty($record)) {
+        if ($record === false) {
             $this->not_found();
             return;
         }
@@ -158,7 +158,7 @@ class Tasks extends Trongate {
      * @return void
      */
     public function delete_conf(): void {
-        $this->trongate_security->_make_sure_allowed();
+        $this->trongate_security->make_sure_allowed();
         
         $update_id = segment(3, 'int');
         
@@ -169,7 +169,7 @@ class Tasks extends Trongate {
         
         $data = $this->model->get_data_for_edit($update_id);
         
-        if (empty($data)) {
+        if ($data === false) {
             $this->not_found();
             return;
         }
@@ -193,7 +193,7 @@ class Tasks extends Trongate {
      * @return void
      */
     public function submit_delete(): void {
-        $this->trongate_security->_make_sure_allowed();
+        $this->trongate_security->make_sure_allowed();
         
         $submit = post('submit', true);
         
@@ -205,14 +205,14 @@ class Tasks extends Trongate {
                 return;
             }
             
-            $record = $this->model->get_data_for_edit($update_id);
+            $record = $this->model->find_by_id($update_id);
             
-            if (empty($record)) {
+            if ($record === false) {
                 redirect('tasks/manage');
                 return;
             }
             
-            $this->db->delete($update_id, 'tasks');
+            $this->model->delete_record($update_id);
             
             set_flashdata('The record was successfully deleted');
             redirect('tasks/manage');
@@ -229,7 +229,7 @@ class Tasks extends Trongate {
      * @return void
      */
     public function set_per_page(): void {
-        $this->trongate_security->_make_sure_allowed();
+        $this->trongate_security->make_sure_allowed();
         
         $selected_index = segment(3, 'int');
         
@@ -249,7 +249,7 @@ class Tasks extends Trongate {
      */
     private function get_pagination_data(int $limit): array {
         return [
-            'total_rows' => $this->db->count('tasks'),
+            'total_rows' => $this->model->count_all(),
             'page_num_segment' => 3,
             'limit' => $limit,
             'pagination_root' => 'tasks/manage',
